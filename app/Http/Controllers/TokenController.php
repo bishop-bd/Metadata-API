@@ -20,8 +20,13 @@ class TokenController extends Controller
         //if set, use it, if not default to 100
         $items_per_page = ($items_per_page) ? $items_per_page : 100;
 
-        //find token include attributes
-        $tokens = Token::with('attributes')->paginate($items_per_page);
+        //find last minted token id
+        $lastMinted = Token::where('minted', true)->max('id');
+
+        //find token include attributes, must be before last minted token
+        $tokens = Token::with('attributes')
+            ->where('id', '<=', $lastMinted)
+            ->paginate($items_per_page);
 
         //hide display_type on attributes if it is null
         foreach ($tokens as &$token){
@@ -43,6 +48,9 @@ class TokenController extends Controller
     {
         //find token
         $token = Token::find($id);
+        if(!$token->minted){
+            return $this->returnError('token not found');
+        }
         $token = $this->removeNullDisplayTypes($token);
 
 
@@ -64,5 +72,9 @@ class TokenController extends Controller
         }
 
         return $token;
+    }
+
+    private function returnError($msg){
+        return response()->json(['error'=>$msg]);
     }
 }

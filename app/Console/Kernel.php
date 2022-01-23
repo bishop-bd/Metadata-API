@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\TokenImportCommand::class,
+        Commands\TokenCheckMintedCommand::class
     ];
 
     /**
