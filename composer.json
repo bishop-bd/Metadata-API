@@ -1,7 +1,7 @@
 {
-    "name": "laravel/lumen",
-    "description": "The Laravel Lumen Framework.",
-    "keywords": ["framework", "laravel", "lumen"],
+    "name": "bishop-bd/metadta-api",
+    "description": "API For Dynamic NFT Metadata",
+    "keywords": ["nft", "metadata", "api"],
     "license": "MIT",
     "type": "project",
     "require": {
