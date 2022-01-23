@@ -20,3 +20,4 @@ $router->get('/', function () use ($router) {
 $router->get('/tokens', 'TokenController@index');
 $router->get('/token/{id}', 'TokenController@show');
 
+$router->get('/test/{id}', 'ImageController@createFromTraits');
