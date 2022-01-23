@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class Attribute extends Model
 {
     protected $fillable = ['trait_type', 'value'];
-    protected $hidden = ['created_at', 'updated_at', 'pivot'];
+    protected $hidden = ['id', 'created_at', 'updated_at', 'pivot'];
 }
