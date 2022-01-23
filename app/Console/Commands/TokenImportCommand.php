@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\OldMetaDataController;
 use App\Models\Attribute;
 use App\Models\Image;
 use App\Models\OldMetaData;
@@ -23,7 +22,7 @@ class TokenImportCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Import tokens from static json.';
 
     /**
      * Create a new command instance.
