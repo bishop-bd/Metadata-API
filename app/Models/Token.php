@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Token extends Model
 {
-    protected $fillable = ['name', 'description'];
+    protected $fillable = ['name', 'description', 'minted'];
     protected $hidden = ['created_at', 'updated_at', 'images'];
     protected $appends = ['image', 'external_link'];
 

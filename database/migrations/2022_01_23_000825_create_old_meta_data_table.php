@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTokensTable extends Migration
+class CreateOldMetaDataTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateTokensTable extends Migration
      */
     public function up()
     {
-        Schema::create('tokens', function (Blueprint $table) {
+        Schema::create('old_meta_data', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->longText('description');
+            $table->text('json_data');
             $table->boolean('minted')->default(false);
-            $table->timestamps();
         });
     }
 
@@ -29,6 +27,6 @@ class CreateTokensTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tokens');
+        Schema::dropIfExists('old_meta_data');
     }
 }
