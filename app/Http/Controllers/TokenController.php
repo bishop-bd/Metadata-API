@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attribute;
 use App\Models\Token;
 use Illuminate\Http\Request;
 
@@ -82,5 +83,37 @@ class TokenController extends Controller
      */
     private function returnError($msg){
         return response()->json(['error'=>$msg]);
+    }
+
+    public function addSeries(){
+
+        $tokens = Token::all();
+
+        foreach ($tokens as $token){
+            if($token->id < 341){
+                $newTrait = Attribute::where([
+                    ['trait_type', 'Series'],
+                    ['value', 0]
+                ])->first();
+
+                $token->attributes()->attach($newTrait);
+            }
+            elseif ($token->id > 340 && $token->id < 4501){
+                $newTrait = Attribute::where([
+                    ['trait_type', 'Series'],
+                    ['value', 1]
+                ])->first();
+
+                $token->attributes()->attach($newTrait);
+            }
+            elseif($token->id > 4500){
+                $newTrait = Attribute::where([
+                    ['trait_type', 'Series'],
+                    ['value', 2]
+                ])->first();
+
+                $token->attributes()->attach($newTrait);
+            }
+        }
     }
 }
