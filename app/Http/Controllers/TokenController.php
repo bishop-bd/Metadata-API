@@ -14,7 +14,7 @@ class TokenController extends Controller
      */
     public function index(Request $request)
     {
-        //check request for per age amount
+        //check request for per page amount
         $items_per_page = $request->input('items_per_page');
 
         //if set, use it, if not default to 100
@@ -48,11 +48,13 @@ class TokenController extends Controller
     {
         //find token
         $token = Token::find($id);
+
         if(!$token->minted){
             return $this->returnError('token not found');
         }
-        $token = $this->removeNullDisplayTypes($token);
 
+        //remove null display types
+        $token = $this->removeNullDisplayTypes($token);
 
         //return JSON response
         return response()->json($token->toArray());
@@ -74,6 +76,10 @@ class TokenController extends Controller
         return $token;
     }
 
+    /**
+     * @param $msg
+     * @return \Illuminate\Http\JsonResponse
+     */
     private function returnError($msg){
         return response()->json(['error'=>$msg]);
     }

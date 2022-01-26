@@ -13,11 +13,17 @@
 |
 */
 
+use App\Http\Controllers\ImageController;
+
 $router->get('/', function () use ($router) {
-    return 'Metadata API';
+    return 'Metadata AP2';
 });
 
 $router->get('/tokens', 'TokenController@index');
 $router->get('/token/{id}', 'TokenController@show');
 
-$router->get('/test/{id}', 'ImageController@createFromTraits');
+$router->get('/image/{id}', 'ImageController@show');
+
+$router->get('/test', function(){
+    return 'Metadata API2';
+});

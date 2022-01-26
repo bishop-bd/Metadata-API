@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Token extends Model
 {
     protected $fillable = ['name', 'description', 'minted'];
-    protected $hidden = ['minted', 'created_at', 'updated_at', 'images'];
+    protected $hidden = ['minted', 'created_at', 'updated_at', 'images', 'lock_haunt'];
     protected $appends = ['image', 'external_link'];
 
     /**
@@ -28,8 +28,7 @@ class Token extends Model
      * @return string
      */
     public function getImageAttribute(){
-        $maxPriority = $this->images->max('priority');
-        $image = config('app.image_base') . $this->images->where('priority', $maxPriority)->first()->file;
+        $image = config('app.image_base') . $this->id;
 
         return $image;
     }
