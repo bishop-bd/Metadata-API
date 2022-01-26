@@ -16,13 +16,14 @@
 use App\Http\Controllers\ImageController;
 
 $router->get('/', function () use ($router) {
-    return 'Metadata AP2';
+    $homepage = file_get_contents('homepage.html');
+    return response($homepage, 200);
 });
 
-$router->get('/tokens', 'TokenController@index');
-$router->get('/token/{id}', 'TokenController@show');
+$router->get('api/tokens', 'TokenController@index');
+$router->get('api/token/{id}', 'TokenController@show');
 
-$router->get('/image/{id}', 'ImageController@show');
+$router->get('image/{id}', 'ImageController@show');
 
 $router->get('/test', function(){
     return 'Metadata API2';
