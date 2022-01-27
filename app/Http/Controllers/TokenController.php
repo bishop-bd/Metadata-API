@@ -21,12 +21,9 @@ class TokenController extends Controller
         //if set, use it, if not default to 100
         $items_per_page = ($items_per_page) ? $items_per_page : 100;
 
-        //find last minted token id
-        $lastMinted = Token::where('minted', true)->max('id');
-
         //find token include attributes, must be before last minted token
         $tokens = Token::with('attributes')
-            ->where('id', '<=', $lastMinted)
+            ->where('id', '<=', $this->lastMinted())
             ->paginate($items_per_page);
 
         //hide display_type on attributes if it is null
@@ -38,6 +35,13 @@ class TokenController extends Controller
         return response()->json($tokens->toArray());
     }
 
+    /**
+     * @return mixed
+     */
+    public static function lastMinted(){
+        //returns id of last token minted
+        return Token::where('minted', true)->max('id');
+    }
 
     /**
      * Display a single token's metadata.

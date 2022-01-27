@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Attribute;
+use App\Models\Token;
 use Illuminate\Console\Command;
 
 class StopHauntCommand extends Command
@@ -37,6 +39,28 @@ class StopHauntCommand extends Command
      */
     public function handle()
     {
-        //
+        //get Haunting attributes -- querying by token is far too intense to work
+        $attributes = Attribute::where('trait_type', 'Haunting')->with('tokens')->get();
+
+        //how many tokens have we unhaunted
+        $count = 0;
+
+        //for every attribute add its total to the count and loop through it's token
+        foreach ($attributes as $attribute) {
+            $count += $attribute->tokens->count();
+
+            //for every token of every attribute if haunting is not locked, remove it, else minus one from the count
+            foreach ($attribute->tokens as $token) {
+                if(!$token->lock_haunt) {
+                    $token->attributes()->detach($attribute);
+                }
+                else{
+                    $count--;
+                }
+            }
+        }
+
+        //output to console how may were unhaunted
+        $this->info($count . ' hauntings removed.');
     }
 }
