@@ -24,6 +24,7 @@ $router->get('api/tokens', 'TokenController@index');
 $router->get('api/token/{id}', 'TokenController@show');
 
 $router->get('image/{id}', 'ImageController@show');
+$router->get('token/{file}', 'ImageController@old');
 
 $router->get('/test', function(){
     return 'Metadata API2';

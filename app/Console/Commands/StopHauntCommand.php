@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Attribute;
+use App\Models\Image;
 use App\Models\Token;
 use Illuminate\Console\Command;
 
@@ -52,7 +53,12 @@ class StopHauntCommand extends Command
             //for every token of every attribute if haunting is not locked, remove it, else minus one from the count
             foreach ($attribute->tokens as $token) {
                 if(!$token->lock_haunt) {
+                    $this->info('Token #' . $token->id . ' haunting removed.');
+
                     $token->attributes()->detach($attribute);
+
+                    $image = Image::where('token_id', $token->id)->orderBy('priority', 'desc')->first();
+                    $image->delete();
                 }
                 else{
                     $count--;

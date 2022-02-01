@@ -21,11 +21,9 @@ class ImageController extends Controller
     public function createNewImageFromTraits($id)
     {
         ini_set('max_execution_time', 180);
-        //ini_set('memory_limit', '-1');
 
         //define trait path
-        $traitPath = app()->basePath('storage/app/traits/');
-        $outputLocation = app()->basePath('storage/app/output/');
+        $outputLocation = app()->basePath('storage/app/images/');
 
         //find last minted token id
         $lastMinted = Token::where('minted', true)->max('id');
@@ -35,6 +33,36 @@ class ImageController extends Controller
 
         //Get the token
         $token = Token::find($id);
+
+        $output = $this->generateImageFromTraits($token);
+
+        //count the images attached to a token (including deleted), so we can determine a proper priority for the new image
+        $imageCount = Image::where('token_id', $token->id)->withTrashed()->count();
+        //guid for new image name
+        $fileName = Str::uuid()->toString() . '.png';
+
+        //create new image in db attached to token
+        $newImage = Image::create([
+            'file'=>$fileName,
+            'token_id'=>$token->id,
+            'priority'=>$imageCount+1
+        ]);
+
+        //save image file
+        $output->save($outputLocation, $fileName, true, '000000', 100, false);
+
+        //return new image info
+        return response($newImage);
+    }
+
+    /**
+     * @param Token $token
+     * @return \PHPImageWorkshop\Core\ImageWorkshopLayer
+     * @throws ImageWorkshopException
+     */
+    private function generateImageFromTraits(Token $token){
+        //define trait path
+        $traitPath = app()->basePath('storage/app/traits/');
 
         //create a virgin layer to start
         $output = ImageWorkshop::initVirginLayer(2000,2000);
@@ -59,25 +87,8 @@ class ImageController extends Controller
             }
         }
 
-        //count the images attached to a token (including deleted), so we can determine a proper priority for the new image
-        $imageCount = Image::where('token_id', $token->id)->withTrashed()->count();
-        //guid for new image name
-        $fileName = Str::uuid()->toString() . '.png';
-
-        //create new image in db attached to token
-        $newImage = Image::create([
-            'file'=>$fileName,
-            'token_id'=>$token->id,
-            'priority'=>$imageCount+1
-        ]);
-
-        //save image file
-        $output->save($outputLocation, $fileName, true, '000000', 100, false);
-
-        //return new image info
-        return response($newImage);
+        return $output;
     }
-
 
     /**
      * Display the specified resource.
@@ -100,23 +111,47 @@ class ImageController extends Controller
 
         //if we haven't downloaded this file before, download it, save it, and return it, otherwise open it and return it
         if(!file_exists($storageDirectory . $image->file)) {
-            //set up stream context options to ignore ssl validation
-            $arrContextOptions=array(
-                "ssl"=>array(
-                    "verify_peer"=>false,
-                    "verify_peer_name"=>false,
-                ),
-            );
+            //if files does not exist regenerate from traits
+            $output = $this->generateImageFromTraits($token);
 
-            $fileData = file_get_contents('https://www.dollface.art/token/' . $image->file, false, stream_context_create($arrContextOptions));
-            file_put_contents($storageDirectory . $image->file, $fileData);
+            //save image file
+            $output->save($storageDirectory, $image->file, true, '000000', 100, false);
+
+            //old code to copy images form the old server for testing purposes
+            //set up stream context options to ignore ssl validation
+//            $arrContextOptions=array(
+//                "ssl"=>array(
+//                    "verify_peer"=>false,
+//                    "verify_peer_name"=>false,
+//                ),
+//            );
+//
+//            $fileData = file_get_contents('https://www.dollface.art/token/' . $image->file, false, stream_context_create($arrContextOptions));
+//            file_put_contents($storageDirectory . $image->file, $fileData);
         }
-        else{
-            $fileData = file_get_contents($storageDirectory . $image->file);
-        }
+
+        $fileData = file_get_contents($storageDirectory . $image->file);
 
         //return an image
         return response($fileData, 200, ['Content-Type'=>'image/png']);
     }
 
+    /**
+     * Provides compatibility with old api image structure for seamless transition as well as image access by filename
+     * @param $file
+     * @return \Illuminate\Http\Response|\Laravel\Lumen\Http\ResponseFactory
+     */
+    public function old($file){
+        $storageDirectory = app()->basePath('storage/app/images/');
+
+        if(!file_exists($storageDirectory . $file)){
+            abort(404);
+        }
+
+        //
+        $fileData = file_get_contents($storageDirectory . $file);
+
+        //return an image
+        return response($fileData, 200, ['Content-Type'=>'image/png']);
+    }
 }

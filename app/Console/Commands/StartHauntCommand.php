@@ -3,8 +3,10 @@
 namespace App\Console\Commands;
 
 use App\Models\Attribute;
+use App\Models\Image;
 use App\Models\Token;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 
 class StartHauntCommand extends Command
 {
@@ -50,16 +52,28 @@ class StartHauntCommand extends Command
         $x = 1;
         foreach($tokens as $token){
             if($x < 91){
+                $level = 1;
                 $token->attributes()->attach($l1Haunt);
             }
             elseif($x > 90 && $x < 100){
+                $level = 2;
                 $token->attributes()->attach($l2Haunt);
             }
             elseif ($x === 100){
+                $level = 3;
                 $token->attributes()->attach($l3Haunt);
             }
 
-            $this->info('Token #' . $token->id . ' haunted.');
+            $newImagePriority = Image::where('token_id', $token->id)->withTrashed()->count();
+
+            $newImage = Image::create([
+                'file'=>$fileName,
+                'priority'=>$newImagePriority,
+                'token_id'=>$token->id
+            ]);
+
+            $fileName = 'hauntings/' . Str::uuid()->toString() . '.png';
+            $this->info('Token #' . $token->id . ' haunted. Level: ' . $level . '. Image: ' . $newImage->id);
 
             $x++;
         }
