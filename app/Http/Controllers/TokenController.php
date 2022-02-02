@@ -32,7 +32,7 @@ class TokenController extends Controller
         }
 
         //return JSON response
-        return response()->json($tokens->toArray());
+        return response()->json($tokens->toArray(), 200, [], JSON_UNESCAPED_SLASHES);
     }
 
     /**
@@ -62,7 +62,7 @@ class TokenController extends Controller
         $token = $this->removeNullDisplayTypes($token);
 
         //return JSON response
-        return response()->json($token->toArray());
+        return response()->json($token->toArray(), 200, [], JSON_UNESCAPED_SLASHES);
     }
 
 
