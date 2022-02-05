@@ -130,10 +130,14 @@ class ImageController extends Controller
 //            file_put_contents($storageDirectory . $image->file, $fileData);
         }
 
+        //acquire file contents
         $fileData = file_get_contents($storageDirectory . $image->file);
 
+        //set mime type to mp4 or png
+        $contentType = (substr($image->file, -4) === '.mp4') ? 'video/mp4' : 'image/png';
+
         //return an image
-        return response($fileData, 200, ['Content-Type'=>'image/png']);
+        return response($fileData, 200, ['Content-Type'=>$contentType]);
     }
 
     /**

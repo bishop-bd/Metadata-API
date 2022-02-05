@@ -89,4 +89,21 @@ class TokenController extends Controller
         return response()->json(['error'=>$msg]);
     }
 
+
+    /**
+     * @param $token
+     * @return mixed
+     */
+    public static function refreshOpenseaMetadata($token){
+        $arrContextOptions=array(
+            "ssl"=>array(
+                "verify_peer"=>false,
+                "verify_peer_name"=>false,
+            ),
+        );
+
+        $refresh = file_get_contents('https://api.opensea.io/asset/' . config('app.contract') . '/' . $token . '?force_update=true', false, stream_context_create($arrContextOptions));
+
+        return json_decode($refresh);
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\TokenController;
 use App\Models\Attribute;
 use App\Models\Image;
 use App\Models\Token;
@@ -51,6 +52,8 @@ class StartHauntCommand extends Command
         //loop through tokens and apply haunts
         $x = 1;
         foreach($tokens as $token){
+            $fileName = 'hauntings/' . Str::uuid()->toString() . '.png';
+
             if($x < 91){
                 $level = 1;
                 $token->attributes()->attach($l1Haunt);
@@ -72,8 +75,9 @@ class StartHauntCommand extends Command
                 'token_id'=>$token->id
             ]);
 
-            $fileName = 'hauntings/' . Str::uuid()->toString() . '.png';
             $this->info('Token #' . $token->id . ' haunted. Level: ' . $level . '. Image: ' . $newImage->id);
+
+            $tokenRefresh = TokenController::refreshOpenseaMetadata($token->id);
 
             $x++;
         }

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\TokenController;
 use App\Models\Attribute;
 use App\Models\Image;
 use App\Models\Token;
@@ -59,6 +60,9 @@ class StopHauntCommand extends Command
 
                     $image = Image::where('token_id', $token->id)->orderBy('priority', 'desc')->first();
                     $image->delete();
+
+
+                    $tokenRefresh = TokenController::refreshOpenseaMetadata($token->id);
                 }
                 else{
                     $count--;
