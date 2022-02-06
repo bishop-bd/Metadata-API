@@ -23,6 +23,7 @@ return [
         'Mouth',
         'Cheeks',
         'Head',
-        'Accessory'
+        'Accessory',
+        'Haunting'
     ] //Trait type image layer order, first = bottom layer
 ];
