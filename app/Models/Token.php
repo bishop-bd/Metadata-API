@@ -39,4 +39,8 @@ class Token extends Model
     public function getExternalLinkAttribute(){
         return config('app.token_url') . $this->id;
     }
+
+    public function getBackgroundAttribute(){
+        return $this->attributes()->where('trait_type', 'Background')->first()->value;
+    }
 }

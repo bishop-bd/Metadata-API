@@ -12,7 +12,7 @@ return [
     'abi' => file_get_contents(realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'abi.txt')),
 
     //Set order for trait types
-    'trait_type_order'=>[
+    'trait_type_order' => [
         'Background',
         'Skin Tone',
         'Skin Texture',
@@ -25,5 +25,25 @@ return [
         'Head',
         'Accessory',
         'Haunting'
-    ] //Trait type image layer order, first = bottom layer
+    ], //Trait type image layer order, first = bottom layer
+
+
+    'one_of_ones' => [
+        'Cenodoll Labyrinth',
+        'Chuck Liddoll',
+        'Clown',
+        'Cryptofinally',
+        'Murder Doll',
+        'NFT Crazy',
+        'Nightmare',
+        'Possesed Artchick',
+        'Rebel Joker',
+        'Stalker'
+    ], //Backgrounds for 1/1s
+
+
+    'one_of_one_order'=>[
+        'Background',
+        'Haunting'
+    ], //Trait order for 1/1s
 ];
