@@ -45,9 +45,9 @@ class StartHauntCommand extends Command
         $tokens = Token::where('minted', true)->inRandomOrder()->limit(100)->get();
 
         //Select haunt traits
-        $l1Haunt = $this->selectHauntType('Common');
-        $l2Haunt = $this->selectHauntType('Rare');
-        $l3Haunt = $this->selectHauntType('Unique');
+        $l1Haunt = $this->selectHauntType(config('app.current_haunt.Common'));
+        $l2Haunt = $this->selectHauntType(config('app.current_haunt.Rare'));
+        $l3Haunt = $this->selectHauntType(config('app.current_haunt.Unique'));
 
         //loop through tokens and apply haunts
         $x = 1;

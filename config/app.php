@@ -1,6 +1,13 @@
 <?php
 
 return [
+    //Current HAunts are pulled from env for universal fast changes
+    'current_haunt'=> [
+        'Common'=>env('COMMON_HAUNT', 'Grasp'),
+        'Rare'=>env('RARE_HAUNT', 'Two Hand Grasp'),
+        'Unique'=>env('UNIQUE_HAUNT', 'Eater')
+    ],
+
 
     //Set these in the env file
     'token_url' => env('APP_URL', 'localhost') . '/view/',
