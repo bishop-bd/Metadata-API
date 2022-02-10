@@ -68,7 +68,7 @@ class ImageController extends Controller
         $output = ImageWorkshop::initVirginLayer(2000,2000);
 
         //get the trait order from config/app.php
-        $traitOrder = (in_array($token->background, config('app.one_of_ones'))) ? config('app.trait_type_order') : config('app.one_of_one_order');
+        $traitOrder = (in_array($token->background, config('app.one_of_ones'))) ? config('app.one_of_one_order') : config('app.trait_type_order');
 
         //loop through trait types in order
         foreach ($traitOrder as $traitType){
